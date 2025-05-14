@@ -43,4 +43,4 @@ def atualizar_lote(lote_id):
     return jsonify({"message": "Status atualizado com sucesso"}), 200
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=10000)
