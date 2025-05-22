@@ -24,9 +24,13 @@ def get_lotes():
 def atualizar_lote(lote_id):
     data = request.get_json()
     novo_status = data.get("status")
+    nova_area = data.get("area")
 
     if novo_status not in ["Disponível", "Vendido"]:
         return jsonify({"error": "Status inválido"}), 400
+
+    if not isinstance(nova_area, (int, float)):
+        return jsonify({"error": "Área inválida"}), 400
 
     conn = get_connection()
     cursor = conn.cursor()
@@ -35,11 +39,11 @@ def atualizar_lote(lote_id):
         conn.close()
         return jsonify({"error": "Lote não encontrado"}), 404
 
-    cursor.execute("UPDATE lotes SET status = ? WHERE id = ?", (novo_status, lote_id))
+    cursor.execute("UPDATE lotes SET status = ?, area_m2 = ? WHERE id = ?", (novo_status, nova_area, lote_id))
     conn.commit()
     conn.close()
 
-    return jsonify({"message": "Status atualizado com sucesso"}), 200
+    return jsonify({"message": "Lote atualizado com sucesso"}), 200
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=10000)
